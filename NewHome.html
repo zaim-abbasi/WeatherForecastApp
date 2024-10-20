@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="importmap">
+        {
+          "imports": {
+            "google-generative-ai": "https://esm.run/@google/generative-ai"
+          }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 font-sans">
+    <div class="flex flex-col md:flex-row h-screen">
+        <!-- Sidebar -->
+        <aside class="bg-gray-800 text-white w-full md:w-64 flex-shrink-0 flex flex-col transition-all duration-300 ease-in-out md:hover:w-72">
+            <div class="p-4">
+                <h1 class="text-xl md:text-2xl font-bold">Weather App</h1>
+            </div>
+            <nav class="flex md:flex-col">
+                <a href="#" id="dashboardLink" class="block py-2 px-4 hover:bg-gray-700 transition duration-300 flex-1 text-center md:text-left">Dashboard</a>
+                <a href="#" id="tablesLink" class="block py-2 px-4 hover:bg-gray-700 transition duration-300 flex-1 text-center md:text-left">Tables</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+            <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4 mb-8">
+                <input type="text" id="cityInput" placeholder="Enter city name" class="w-full md:w-auto p-2 border rounded-l focus:outline-none focus:ring-2 focus:ring-blue-600 transition duration-300 flex-grow">
+                <button id="getWeatherBtn" class="w-full md:w-auto bg-blue-600 text-white p-2 rounded-r hover:bg-blue-700 transition duration-300">Get Weather</button>
+                <button id="geolocateBtn" class="w-full md:w-auto bg-green-500 text-white p-2 rounded hover:bg-green-600 transition duration-300">Use My Location</button>
+                <div class="flex items-center space-x-4">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="tempUnit" value="metric" id="celsius" class="form-checkbox text-blue-600" checked>
+                        <span class="ml-2 text-white">°C</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" name="tempUnit" value="imperial" id="fahrenheit" class="form-checkbox text-blue-600">
+                        <span class="ml-2 text-white">°F</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner" class="hidden fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+
+            <!-- Dashboard Page -->
+            <div id="dashboardPage" class="space-y-8">
+                <!-- Weather Widget -->
+                <div id="weatherWidget" class="bg-white p-4 md:p-6 rounded-lg shadow-lg hidden transform transition duration-500 hover:scale-105 bg-cover bg-center">
+                    <h2 id="cityName" class="text-2xl md:text-3xl font-bold mb-4 text-white"></h2>
+                    <div id="weatherInfo" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-white"></div>
+                </div>
+
+                <!-- Charts -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                    <div class="bg-white p-4 rounded-lg shadow transform transition duration-500 hover:scale-105">
+                        <canvas id="temperatureChart"></canvas>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow transform transition duration-500 hover:scale-105">
+                        <canvas id="conditionsChart"></canvas>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow transform transition duration-500 hover:scale-105">
+                        <canvas id="temperatureLineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tables Page -->
+            <div id="tablesPage" class="hidden space-y-8">
+                <!-- Filter Buttons -->
+                <div class="flex flex-wrap gap-2">
+                    <button id="sortAscBtn" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-300">Sort Ascending</button>
+                    <button id="sortDescBtn" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-300">Sort Descending</button>
+                    <button id="filterRainBtn" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-300">Filter Rain</button>
+                    <button id="highestTempBtn" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-300">Highest Temperature</button>
+                </div>
+
+                <!-- Forecast Table -->
+                <div id="forecastTable" class="bg-white p-4 md:p-6 rounded-lg shadow-lg transform transition duration-500 hover:scale-105">
+                    <h3 class="text-xl md:text-2xl font-bold mb-4">5-Day Forecast</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full table-auto">
+                            <thead>
+                                <tr class="bg-blue-100">
+                                    <th class="px-2 md:px-4 py-2 text-left">Date</th>
+                                    <th class="px-2 md:px-4 py-2 text-left">Temperature</th>
+                                    <th class="px-2 md:px-4 py-2 text-left">Conditions</th>
+                                    <th class="px-2 md:px-4 py-2 text-left">Humidity</th>
+                                    <th class="px-2 md:px-4 py-2 text-left">Wind Speed</th>
+                                </tr>
+                            </thead>
+                            <tbody id="forecastTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="pagination" class="mt-4 flex justify-center"></div>
+                </div>
+
+                <!-- Chatbot Widget -->
+                <div class="bg-white p-4 md:p-6 rounded-lg shadow-lg transform transition duration-500 hover:scale-105">
+                    <h3 class="text-xl md:text-2xl font-bold mb-4">Weather Chatbot</h3>
+                    <div id="chatMessages" class="h-48 md:h-64 overflow-y-auto mb-4 p-4 border rounded"></div>
+                    <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+                        <input type="text" id="chatInput" placeholder="Ask about the weather..." class="w-full md:flex-grow p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600 transition duration-300">
+                        <button id="sendChatBtn" class="w-full md:w-auto bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition duration-300">Send</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js" type="module"></script>
+</body>
+</html>

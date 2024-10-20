@@ -1,0 +1,94 @@
+/* Additional custom styles */
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+#weatherWidget {
+    transition: all 0.5s ease;
+}
+
+.weather-icon {
+    width: 50px;
+    height: 50px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#chatMessages {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+}
+
+#chatMessages .message {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+#chatMessages .user {
+    background-color: #e2e8f0;
+    text-align: right;
+}
+
+#chatMessages .bot {
+    background-color: #edf2f7;
+}
+
+.hover-scale {
+    transition: transform 0.3s ease-in-out;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.bounce {
+    animation: bounce 1s infinite;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.rotate {
+    animation: rotate 10s linear infinite;
+}
+
+/* Smooth scrolling for anchor links */
+html {
+    scroll-behavior: smooth;
+}
