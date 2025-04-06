@@ -1,0 +1,49 @@
+name: CI/CD Pipeline (Test + Deploy)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 1. HTML Validation (checks for syntax errors)
+      - name: Validate HTML
+        uses: validator/validator-action@v1
+        with:
+          url: "./index.html"  # Replace if your main file has a different name
+
+      # 2. JavaScript Linting (basic syntax checks)
+      - name: Lint JavaScript
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: |
+          npm install -g eslint
+          eslint script.js --fix || true  # Replace with your JS file(s)
+
+      # 3. Check for broken links (internal only)
+      - name: Check Links
+        uses: peter-evans/link-checker@v1
+        with:
+          args: -v -r ./index.html
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: test  # Only deploy if tests pass
+    if: github.ref == 'refs/heads/main'  # Only on main branch
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          keep_files: false
