@@ -6,7 +6,7 @@ const GEMINI_API_KEY = "AIzaSyBiAqNp9D5w_lssMVnDhmfk6d5kqa7WPxw";
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-
+// temp comment
 const cityInput = document.getElementById('cityInput');
 const getWeatherBtn = document.getElementById('getWeatherBtn');
 const geolocateBtn = document.getElementById('geolocateBtn');
