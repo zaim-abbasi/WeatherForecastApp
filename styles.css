@@ -1,0 +1,131 @@
+/* Basic styles for the weather widget */
+#weatherWidget {
+    background-color: lightblue;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease-in-out;
+}
+
+/* Temperature and weather details */
+#temperature {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+#humidity, #windSpeed, #weatherDescription {
+    font-size: 1.2rem;
+}
+
+/* Custom styles for the forecast table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+/* Hover effect for table rows */
+tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05); /* Slight highlight on hover */
+}
+
+th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Chatbot styling */
+#chatResponse {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+    #weatherWidget {
+        padding: 15px;
+    }
+
+    #temperature {
+        font-size: 2.5rem; /* Smaller font size on mobile */
+    }
+
+    #humidity, #windSpeed, #weatherDescription {
+        font-size: 1rem; /* Smaller font size on mobile */
+    }
+
+    th, td {
+        padding: 10px; /* Adjust padding for smaller screens */
+    }
+}
+
+
+ /* Simple loading spinner */
+ .loader {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #ffffff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* CSS Animation for the weather icon */
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+   /* Custom styles for light and dark themes */
+   .light-theme {
+    background-color: #f9fafb; /* Light background */
+    color: #1f2937; /* Dark text */
+}
+
+.light-theme #weather-details {
+    background-color: #ffffff; /* White background for the widget */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.light-theme #chatResponse {
+    background-color: #e5e7eb; /* Light gray for chatbot response */
+}
+
+.dark-theme {
+    background-color: #1f2937; /* Dark background */
+    color: #f9fafb; /* Light text */
+}
+
+.dark-theme #weather-details {
+    background-color: #374151; /* Darker background for the widget */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme #chatResponse {
+    background-color: #4b5563; /* Dark gray for chatbot response */
+}
